@@ -516,4 +516,40 @@ class DatabaseHelper {
       });
     }
   }
+  // ===== BACKUP & RESTORE =====
+static Map<String, dynamic> exportAll() {
+  List<Map<String, dynamic>> dump(Box b) =>
+      b.values.map((e) => Map<String, dynamic>.from(e)).toList();
+
+  return {
+    'version': 1,
+    'createdAt': DateTime.now().toIso8601String(),
+    'buku': dump(bukuBox),
+    'anggota': dump(anggotaBox),
+    'peminjaman': dump(peminjamanBox),
+    'admin': dump(adminBox),
+  };
+}
+
+static Future<void> importAll(Map<String, dynamic> data) async {
+  // validasi dulu sebelum data lama dihapus
+  if (data['version'] != 1) {
+    throw Exception('Versi backup tidak dikenali');
+  }
+  for (final k in ['buku', 'anggota', 'peminjaman', 'admin']) {
+    if (data[k] is! List) throw Exception('Backup rusak: "$k" tidak ada');
+  }
+
+  Future<void> restore(Box b, List items) async {
+    await b.clear();
+    await b.addAll(items.map((e) => Map<String, dynamic>.from(e)));
+  }
+
+  await restore(bukuBox, data['buku']);
+  await restore(anggotaBox, data['anggota']);
+  await restore(peminjamanBox, data['peminjaman']);
+  await restore(adminBox, data['admin']);
+
+  await seedAdminDefault(); // jaga-jaga kalau admin kosong
+}
 }

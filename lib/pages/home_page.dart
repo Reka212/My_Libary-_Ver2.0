@@ -6,6 +6,7 @@ import 'anggota_page.dart';
 import 'pinjam_page.dart';
 import 'laporan_page.dart';
 import 'admin_page.dart';
+import 'backup_page.dart';
 import '../database/database_helper.dart';
 
 class HomePage extends StatelessWidget {
@@ -125,7 +126,7 @@ class HomePage extends StatelessWidget {
                 menuCard(context, "Peminjaman", Icons.swap_horiz, const PinjamPage()),
                 menuCard(context, "Laporan", Icons.bar_chart, const LaporanPage()),
                 menuCard(context, "Admin", Icons.admin_panel_settings, const AdminPage()),
-               
+                menuCard(context, "Backup", Icons.cloud, const BackupPage()),
                 ],
               ),
             ),
